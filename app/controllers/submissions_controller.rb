@@ -4,6 +4,7 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.json
   def index
+    redirect_to '/login' unless current_user
     @submissions = Submission.all
   end
 
@@ -104,4 +105,3 @@ class SubmissionsController < ApplicationController
       end
     end
 end
-

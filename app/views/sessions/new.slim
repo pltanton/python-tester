@@ -1,0 +1,10 @@
+.row
+  .col.s12.m10.offset-m1
+    .card
+      .card-content
+        = form_tag('/login', method: 'post') do
+          .input-field.col.s12
+            = text_field_tag :login
+          .input-filed.col.s12
+            = text_field_tag :password
+          = submit_tag("Log in")
