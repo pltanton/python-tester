@@ -3,8 +3,12 @@
     .card
       .card-content
         = form_tag('/login', method: 'post') do
-          .input-field.col.s12
-            = text_field_tag :login
-          .input-filed.col.s12
-            = text_field_tag :password
-          = submit_tag("Log in")
+          .row
+            .input-field.col.s12
+              = text_field_tag :login
+              = label_tag :login, 'Login'
+          .row
+            .input-field.col.s12
+              = password_field_tag :password
+              = label_tag :password, 'Password'
+          = submit_tag 'Log in', class: %w(btn)

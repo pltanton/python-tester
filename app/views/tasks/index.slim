@@ -1,0 +1,23 @@
+.row
+  .col.s12
+    .card.hoverable
+      .card-content
+        span.card-title Tasks
+      
+      table.striped
+        thead: tr
+          th width='7%' ID
+          th Title
+          - if current_user && current_user.admin
+            th width='10%' colspan='2'
+        tbody
+          - @tasks.each do |task|
+            a href='#{tasks_path(task)}'
+              tr style='cursor: pointer'
+                td[onclick='window.location.href="#{task_path(task)}"'] ##{task.id}
+                td[onclick='window.location.href="#{task_path(task)}"'] #{task.title}
+                - if current_user && current_user.admin
+                  td
+                    = link_to content_tag(:i, 'mode_edit', class: %w(material-icons black-text)), edit_task_path(task)
+                  td
+                    = link_to content_tag(:i, 'delete', class: %w(material-icons black-text)), task, method: :delete, data: { confirm: 'Are you sure?' }

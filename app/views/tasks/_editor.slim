@@ -1,0 +1,36 @@
+= render 'modal_new_test'
+.row: .col.s12
+  .card 
+    .card-content
+      span.card-title #{title}
+      = form_for(task) do |f|
+        - if task.errors.any?
+          #error_explanation
+            h2
+              = pluralize(task.errors.count, "error")
+              | prohibited this task from being saved:
+            ul
+              - task.errors.full_messages.each do |message|
+                li= message
+        .row: .input-field.col.s12
+          = f.label :title
+          = f.text_field :title
+        .row: .input-field.col.s12
+          = f.label :body
+          = f.text_area :body, class: 'materialize-textarea'
+        .row: .input-field.col.s12
+          = f.label :format
+          = f.text_area :format, class: 'materialize-textarea'
+        .row: .col.s12
+          a.waves-effect.waves-light.btn.modal-trigger href='#modal-new-test' Add test
+          = f.submit 'Save', class: 'btn right'
+  
+  #test-card.card style='display: none'
+    .card-content
+      span.card-title Tests
+      table#test-table
+        thead: tr
+          td: b Input
+          td: b Output
+          td width='7%'
+        tbody

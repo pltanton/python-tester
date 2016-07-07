@@ -12,8 +12,13 @@
  *
  *= require_tree .
  *= require_self
+ *= require material_icons
  */
 
- @import "materialize/components/color";
- $primary-color: color("blue", "lighten-1") !default;
- @import "materialize";
+@import "materialize/components/color";
+$primary-color: color("blue", "lighten-1") !default;
+@import "materialize";
+
+#content {
+  padding-top: 10px;
+}

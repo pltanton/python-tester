@@ -49,3 +49,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'slim'
 gem 'materialize-sass'
+gem 'redcarpet'
+gem 'coderay'
+gem 'material_icons'
+gem 'rails_script'

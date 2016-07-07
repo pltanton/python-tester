@@ -25,14 +25,17 @@ class SubmissionsController < ApplicationController
   # POST /submissions
   # POST /submissions.json
   def create
-    @submission = Submission.new(submission_params)
-    solution = submission_params[:solution].read
+    @submission = Submission.new
+    solution = params[:solution].read
     @submission.solution = solution
+    @submission.timestamp = Time.now
+    @submission.user = current_user
+    @submission.task_id = params[:task_id]
 
     respond_to do |format|
       if @submission.save
         test_solution
-        format.html { redirect_to @submission, notice: 'Submission was successfully created.' }
+        format.html { redirect_to :back, notice: 'Submission was successfully created.' }
         format.json { render :show, status: :created, location: @submission }
       else
         format.html { render :new }
@@ -73,7 +76,7 @@ class SubmissionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def submission_params
-      params.require(:submission).permit(:task_id, :user_id, :status, :timestamp, :solution)
+      params.permit(:solution, :task_id, :authenticity_token)
     end
 
     def test_solution

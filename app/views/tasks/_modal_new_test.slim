@@ -1,0 +1,13 @@
+#modal-new-test.modal
+  .modal-content
+    h4 Create test pair
+    .divider
+    .row
+      .input-field.col.s6
+        = label_tag :in
+        = text_area_tag :in, nil, class: 'materialize-textarea'
+      .input-field.col.s6
+        = label_tag :out
+        = text_area_tag :out, nil, class: 'materialize-textarea'
+    .row
+      = submit_tag 'Submit', class: 'btn', id: 'submit-new-task'

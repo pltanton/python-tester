@@ -7,9 +7,30 @@ html
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
   body
-    nav
-      .nav-wrapper
-        a.brand-logo href='#'
+    .navbar-fixed: nav
+      .nav-wrapper.container
+        a.brand-log href='/'
           | MMSH Python Checker
-    .container
+        ul#nav-mobile.right
+          li
+            = link_to 'Tasks', tasks_path
+          - if current_user
+            li: a[href='/logout'] Log out
+          - else 
+            li: a[href='/login'] Log in
+    #content.container
       = yield
+      
+    - if current_user && current_user.admin
+      .fixed-action-btn style='bottom: 45px; right: 24px;'
+        a.btn-floating.btn-large.red
+          i.material-icons settings
+        ul
+          li
+            = link_to content_tag(:i, 'contacts', class: %w(material-icons)), users_path, class: %w(btn-floating blue)
+          li
+            = link_to content_tag(:i, 'note_add', class: %w(material-icons)), new_task_path, class: %w(btn-floating green)
+    = include_rails_script
+
+javascript:
+  var notice = "#{notice}";
