@@ -6,6 +6,7 @@ class App.Base
     if notice != ''
       Materialize.toast notice, 2500
     $('.modal-trigger').leanModal()
+    $('textarea').trigger('autoresize')
     return this
 
 

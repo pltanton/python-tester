@@ -28,6 +28,7 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save
+        save_tests(JSON.parse params[:tests])
         format.html { redirect_to @task, notice: 'Task was successfully created.' }
         format.json { render :show, status: :created, location: @task }
       else
@@ -40,8 +41,10 @@ class TasksController < ApplicationController
   # PATCH/PUT /tasks/1
   # PATCH/PUT /tasks/1.json
   def update
+    puts task_params
     respond_to do |format|
       if @task.update(task_params)
+        save_tests(JSON.parse params[:tests])
         format.html { redirect_to @task, notice: 'Task was successfully updated.' }
         format.json { render :show, status: :ok, location: @task }
       else
@@ -62,6 +65,19 @@ class TasksController < ApplicationController
   end
 
   private
+
+    def save_tests(tests)
+      added = []
+      tests.each do |test|
+        t = test['inedx'] ? Test.find(test[:index]) : Test.new
+        t.in = test['in']
+        t.out = test['out']
+        t.task = @task
+        added << t.id if t.save
+      end
+      Test.where(task: @task).where.not(id: added).delete_all
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_task
       @task = Task.find(params[:id])
@@ -69,6 +85,6 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:title, :body, :format)
+      params.require(:task).permit(:title, :body, :format, :tests)
     end
 end

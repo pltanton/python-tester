@@ -1,3 +1,5 @@
+require 'shellwords'
+
 class SubmissionsController < ApplicationController
   before_action :set_submission, only: [:show, :edit, :update, :destroy]
 
@@ -34,7 +36,7 @@ class SubmissionsController < ApplicationController
 
     respond_to do |format|
       if @submission.save
-        test_solution
+        t = test_solution
         format.html { redirect_to :back, notice: 'Submission was successfully created.' }
         format.json { render :show, status: :created, location: @submission }
       else
@@ -69,42 +71,56 @@ class SubmissionsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_submission
-      @submission = Submission.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def submission_params
-      params.permit(:solution, :task_id, :authenticity_token)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_submission
+    @submission = Submission.find(params[:id])
+  end
 
-    def test_solution
-      submission = @submission
-      Thread.new do
-        Test.where(task: submission.task).each do |test|
-          test_solution_unit test, submission
-        end
-      end
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def submission_params
+    params.permit(:solution, :task_id, :authenticity_token)
+  end
 
-    def test_solution_unit(test, submission)
-      t_sol = Thread.new do
-        ans = `python3 -c "#{submission.solution.sub '"', '\"'}" <<< #{test.in}`
-        if ans.split != test.out.split
-          puts ans.split
-          puts test.out.split
-          submission.update status: 'WA'
-        elsif submission.status == 'CH'
-          submission.update status: 'OK'
-        end
-      end
-      Thread.new do
-        sleep 4
-        if t_sol.alive?
-          puts submission
+  def test_solution
+    submission = @submission
+    Spawnling.new do
+      ok = true
+      Test.where(task: submission.task).each do |test|
+        status, output = test_solution_unit test, submission
+        case status
+        when :TL
           submission.update status: 'TL'
+          ok = false
+          break
+        when :WA
+          submission.update status: "WA ##{test.id}"
+          ok = false
+          break
         end
       end
+      submission.update status: 'OK' if ok
     end
+  end
+
+  def test_solution_unit(test, submission)
+    begin
+      stdout = ''
+      status = open4.spawn(
+        "python -c #{Shellwords.escape submission.solution}",
+        timeout: 3,
+        stdout: stdout,
+        stdin: test.in
+      )
+
+      if status.exitstatus == 0 && stdout.squish == test.out.squish
+        puts 'here'
+        :OK
+      else
+        :WA
+      end
+    rescue Timeout::Error
+      :TL
+    end
+  end
 end

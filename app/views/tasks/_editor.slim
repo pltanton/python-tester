@@ -1,6 +1,6 @@
 = render 'modal_new_test'
 .row: .col.s12
-  .card 
+  .card
     .card-content
       span.card-title #{title}
       = form_for(task) do |f|
@@ -23,14 +23,20 @@
           = f.text_area :format, class: 'materialize-textarea'
         .row: .col.s12
           a.waves-effect.waves-light.btn.modal-trigger href='#modal-new-test' Add test
-          = f.submit 'Save', class: 'btn right'
-  
-  #test-card.card style='display: none'
+          a#submit-new-task-button.right.waves-effect.waves-light.btn Submit
+
+  #test-card.card style="#{'display: none' if Test.where(task: task.id).length == 0}"
     .card-content
       span.card-title Tests
       table#test-table
         thead: tr
           td: b Input
           td: b Output
-          td width='7%'
+          td width='10%' colspan='2'
         tbody
+          - Test.where(task: task.id).each do |test|
+            tr.test-instance data-index='#{test.id}'
+              td #{test.in}
+              td #{test.out}
+              td: i.material-icons.edit-test mode_edit
+              td: i.material-icons.delete-test delete
