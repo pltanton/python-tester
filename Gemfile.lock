@@ -123,6 +123,7 @@ GEM
     rb-inotify (0.9.7)
       ffi (>= 0.5.0)
     redcarpet (3.3.4)
+    redis (3.3.0)
     sass (3.4.22)
     sass-rails (5.0.5)
       railties (>= 4.0.0, < 6)
@@ -182,6 +183,7 @@ DEPENDENCIES
   rails (~> 5.0.0)
   rails_script
   redcarpet
+  redis (~> 3.0)
   sass-rails (~> 5.0)
   slim
   spawnling

@@ -83,3 +83,6 @@ class App.Tasks extends App.Base
   new: =>
     $('#submit-new-task').click -> saveTest()
     $('#submit-new-task-button').click -> saveTask()
+
+  show: =>
+    App.cable.initSubmisisons()

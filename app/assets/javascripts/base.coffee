@@ -2,7 +2,6 @@ class App.Base
 
   constructor: ->
     if (window.jQuery) then RailsScript.setClearEventHandlers() # clearing application event handlers only possible with jQuery
-    console.log notice
     if notice != ''
       Materialize.toast notice, 2500
     $('.modal-trigger').leanModal()

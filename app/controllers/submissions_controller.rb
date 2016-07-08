@@ -34,14 +34,13 @@ class SubmissionsController < ApplicationController
     @submission.user = current_user
     @submission.task_id = params[:task_id]
 
-    respond_to do |format|
-      if @submission.save
-        t = test_solution
-        format.html { redirect_to :back, notice: 'Submission was successfully created.' }
-        format.json { render :show, status: :created, location: @submission }
-      else
-        format.html { render :new }
-        format.json { render json: @submission.errors, status: :unprocessable_entity }
+    if @submission.save
+      TestSubmissionJob.perform_later @submission
+    else
+      respond_to do |format|
+        format.json do
+          render json: { errors: @submission.errors }, status: :internal_server_error
+        end
       end
     end
   end
@@ -80,47 +79,5 @@ class SubmissionsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def submission_params
     params.permit(:solution, :task_id, :authenticity_token)
-  end
-
-  def test_solution
-    submission = @submission
-    Spawnling.new do
-      ok = true
-      Test.where(task: submission.task).each do |test|
-        status, output = test_solution_unit test, submission
-        case status
-        when :TL
-          submission.update status: 'TL'
-          ok = false
-          break
-        when :WA
-          submission.update status: "WA ##{test.id}"
-          ok = false
-          break
-        end
-      end
-      submission.update status: 'OK' if ok
-    end
-  end
-
-  def test_solution_unit(test, submission)
-    begin
-      stdout = ''
-      status = open4.spawn(
-        "python -c #{Shellwords.escape submission.solution}",
-        timeout: 3,
-        stdout: stdout,
-        stdin: test.in
-      )
-
-      if status.exitstatus == 0 && stdout.squish == test.out.squish
-        puts 'here'
-        :OK
-      else
-        :WA
-      end
-    rescue Timeout::Error
-      :TL
-    end
   end
 end

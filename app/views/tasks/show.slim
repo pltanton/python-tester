@@ -6,11 +6,11 @@
           | Problem ##{@task.id}: #{@task.title}
           - if current_user && current_user.admin
             = link_to content_tag(:i, 'mode_edit', class: %w(material-icons black-text right)), edit_task_path(@task)
-  
+
         p
           = markdown @task.body
-          
-        span.card-title Format 
+
+        span.card-title Format
         p #{@task.format}
 
 -if current_user
@@ -19,23 +19,14 @@
       .card.hoverable
         .card-content
           span.card-title My submissions
-          
+
           .row
-            table.striped
-              tbody
-                -  submissions_of_user_for_task(current_user, @task).each do |submission|
-                  tr
-                    td #{submission.id}
-                    td #{submission.status}
-                    td #{submission.timestamp}
-                    
-          .row
-            = form_tag submissions_path, method: 'post', multipart: true do
+            = form_tag submissions_path, method: 'post', multipart: true, remote: true, authenticity_token: true do
               = hidden_field_tag :task_id, @task.id
               .col.s10
                 .file-field.input-field
                   .btn
-                    span 
+                    span
                       i.material-icons.left add
                       | Chose File
                     = file_field_tag :solution, accept: %w(text/x-script.python)
@@ -43,3 +34,9 @@
                     input.file-path.validate type='text'
               .col.s2: .input-field
                 = submit_tag 'done', class: %w(btn-floating btn-large green material-icons)
+                
+          .row
+            table.striped
+              tbody#submissions
+                - @submissions.each do |submission|
+                  = render 'submissions/tr', submission: submission

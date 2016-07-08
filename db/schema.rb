@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160703222732) do
+ActiveRecord::Schema.define(version: 20160707224220) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,9 +18,11 @@ ActiveRecord::Schema.define(version: 20160703222732) do
   create_table "submissions", force: :cascade do |t|
     t.integer  "task_id"
     t.integer  "user_id"
-    t.string   "status",    default: "CH"
+    t.string   "status",      default: "CH"
     t.datetime "timestamp"
     t.binary   "solution"
+    t.integer  "bad_test_id"
+    t.string   "bad_out"
     t.index ["task_id"], name: "index_submissions_on_task_id", using: :btree
     t.index ["user_id"], name: "index_submissions_on_user_id", using: :btree
   end
@@ -46,6 +48,7 @@ ActiveRecord::Schema.define(version: 20160703222732) do
   end
 
   add_foreign_key "submissions", "tasks"
+  add_foreign_key "submissions", "tests", column: "bad_test_id"
   add_foreign_key "submissions", "users"
   add_foreign_key "tests", "tasks"
 end

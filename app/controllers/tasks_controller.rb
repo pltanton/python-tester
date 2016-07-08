@@ -10,6 +10,9 @@ class TasksController < ApplicationController
   # GET /tasks/1
   # GET /tasks/1.json
   def show
+    if current_user
+      @submissions = Submission.find_for_user_and_task current_user, @task
+    end
   end
 
   # GET /tasks/new
@@ -29,11 +32,11 @@ class TasksController < ApplicationController
     respond_to do |format|
       if @task.save
         save_tests(JSON.parse params[:tests])
-        format.html { redirect_to @task, notice: 'Task was successfully created.' }
-        format.json { render :show, status: :created, location: @task }
+        # format.html { redirect_to @task, notice: 'Task was successfully created.' }
+        # format.json { render :show, status: :created, location: @task }
       else
-        format.html { render :new }
-        format.json { render json: @task.errors, status: :unprocessable_entity }
+        # format.html { render :new }
+        # format.json { render json: @task.errors, status: :unprocessable_entity }
       end
     end
   end
