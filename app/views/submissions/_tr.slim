@@ -1,4 +1,5 @@
-tr data-submisison-id='#{submission.id}'
+tr data-submission-id='#{submission.id}'
   td ##{submission.id}
   td #{submission.timestamp}
-  td #{submission.status}
+  td.right #{submission.status}
+  td: i.material-icons.pointer.tooltipped data-position='top' data-tooltip='Show submission' width='5%' visibility

@@ -4,8 +4,6 @@ class SubmissionsChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
-    puts '-' * 1000
-    
     # Any cleanup needed when channel is unsubscribed
   end
 end

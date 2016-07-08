@@ -15,4 +15,5 @@ App.cable.initSubmisisons = ->
         subm.fadeOut().replaceWith(tr).fadeIn()
       else
         tr.prependTo('#submissions').fadeIn()
+      $('.tooltipped').tooltip {delay: 50}
       # Called when there's incoming data on the websocket for this channel

@@ -18,10 +18,11 @@ class TestSubmissionJob < ApplicationJob
                           bad_test_id: test.id
         ok = false
         break
-      when :WA
-        submission.update status: "WA ##{number_of_test}",
-                          bad_test: test,
-                          bad_out: output
+      when :WA, :SE
+        submission.update status: "#{status} ##{number_of_test}",
+                          bad_test_id: test.id,
+                          bad_out: output.to_s
+        puts st
         ok = false
         break
       end
@@ -33,17 +34,21 @@ class TestSubmissionJob < ApplicationJob
   def test_solution_unit(test, submission)
     begin
       stdout = ''
+      stderr = ''
       status = open4.spawn(
         "python -c #{Shellwords.escape submission.solution}",
         timeout: 3,
         stdout: stdout,
+        stderr: stderr,
         stdin: test.in
       )
 
-      if status.exitstatus == 0 && stdout.squish == test.out.squish
+      if status.exitstatus != 0 || !stderr.empty?
+        return :SE, stderr
+      elsif stdout.squish == test.out.squish
         :OK
       else
-        :WA
+        return :WA, stdout
       end
     rescue Timeout::Error
       :TL

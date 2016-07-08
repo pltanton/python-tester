@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   get 'logout' => 'sessions#destroy'
 
   resources :tests
-  resources :submissions
+  resources :submissions, only: %i(index create show)
   resources :tasks
   resources :users
 end

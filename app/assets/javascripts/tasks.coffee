@@ -1,6 +1,21 @@
 id = 0
 edit = undefined
 
+# Fetched solution and opens modal with it
+App.fetchSolution = (solutionId) ->
+  $.getJSON "/submissions/#{solutionId}", (data) ->
+    console.log data
+    modal = $ '#code-modal'
+    title = $ '#code-title'
+    output = $ '#code-output'
+    body = $ '#code-body'
+
+    title.text data.title
+    body.empty().append data.body
+    output.text data.output
+
+    modal.openModal()
+
 # Saves new test to local object and drows it on page
 saveTest = ->
   input = $('#in')
@@ -86,3 +101,7 @@ class App.Tasks extends App.Base
 
   show: =>
     App.cable.initSubmisisons()
+    $('#submissions').children().each (e) ->
+      submissionId = $(this).data().submissionId
+      $('i', $(this)).click () ->
+        App.fetchSolution(submissionId)

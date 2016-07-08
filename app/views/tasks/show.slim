@@ -33,10 +33,19 @@
                   .file-path-wrapper
                     input.file-path.validate type='text'
               .col.s2: .input-field
-                = submit_tag 'done', class: %w(btn-floating btn-large green material-icons)
+                = submit_tag 'done', data: { disable_with: false }, class: %w(btn-floating btn-large green material-icons)
                 
           .row
             table.striped
               tbody#submissions
                 - @submissions.each do |submission|
                   = render 'submissions/tr', submission: submission
+  
+  #code-modal.modal
+    .modal-content
+      h4#code-title
+      #code-body.row
+      -if current_user.admin
+        .divider
+        h5 Output:
+        #code-output.row

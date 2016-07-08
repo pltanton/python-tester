@@ -4,8 +4,14 @@ class App.Base
     if (window.jQuery) then RailsScript.setClearEventHandlers() # clearing application event handlers only possible with jQuery
     if notice != ''
       Materialize.toast notice, 2500
+    if notice_alert != ''
+      Materialize.toast notice-alert, 2500, 'red'
     $('.modal-trigger').leanModal()
     $('textarea').trigger('autoresize')
+    Materialize.updateTextFields()
+    $('.tooltipped').tooltip {delay: 50}
+    $.ajaxSetup
+      headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')}
     return this
 
 

@@ -22,3 +22,7 @@ $primary-color: color("blue", "lighten-1") !default;
 #content {
   padding-top: 10px;
 }
+
+.pointer {
+  cursor: pointer;
+}
