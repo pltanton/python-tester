@@ -1,0 +1,24 @@
+.row: .col.s12
+  .card
+    .card-content
+      span.card-title #{title}
+      = form_for(user) do |f|
+        - if user.errors.any?
+          #error_explanation
+            h4
+              = pluralize(user.errors.count, "error")
+              | prohibited this task from being saved:
+            ul
+              - user.errors.full_messages.each do |message|
+                li= message
+        .row: .input-field.col.s12
+          = f.label :login
+          = f.text_field :login
+        .row: .input-field.col.s12
+          = f.label :password
+          = f.text_field :password
+        .row: .col.s12
+          = f.check_box :admin
+          = f.label :admin
+        .row: .col.s12
+          = f.submit class: %w(btn waves-effect waves-light)

@@ -1,0 +1,37 @@
+.row: .col.s12
+  .card.hoverable
+    .card-content
+      span.card-title #{title}
+      = form_for(contest) do |f|
+        - if contest.errors.any?
+          #error_explanation
+            h2
+              = pluralize(contest.errors.count, "error")
+              | prohibited this task from being saved:
+            ul
+              - contest.errors.full_messages.each do |message|
+                li= message
+        .row: .input-field.col.s12
+          = f.label :name
+          = f.text_field :name
+        .row: .input-field.col.s12
+          = f.label :description
+          = f.text_area :description, class: 'materialize-textarea'
+        .row: .col.s12
+          = f.check_box :active
+          = f.label :active
+        .row: .col.s12
+          a#submit-new-contest-button.waves-effect.waves-light.btn Submit
+          =link_to 'Back', :back, class: %w(btn waves-effect waves-light right)
+
+ul.collection.hoverable.z-depth-1
+  - @tasks.each do |task|
+    li.collection-item
+      div
+        div.right ##{task.id}
+        input [id='chekbox-#{task.id}' data-task-id='#{task.id}'
+          type='checkbox'
+          checked=("checked" if @connected_tasks.include? task.id)]
+        label.black-text for='chekbox-#{task.id}' = task.title
+
+

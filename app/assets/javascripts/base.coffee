@@ -6,12 +6,12 @@ class App.Base
       Materialize.toast notice, 2500
     if notice_alert != ''
       Materialize.toast notice-alert, 2500, 'red'
-    $('.modal-trigger').leanModal()
-    $('textarea').trigger('autoresize')
-    Materialize.updateTextFields()
-    $('.tooltipped').tooltip {delay: 50}
     $.ajaxSetup
       headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')}
+    $('textarea').each -> $(this).trigger('autoresize')
+    Materialize.updateTextFields()
+    $('.material-tooltip:visible').each -> $(this).remove()
+    $('.tooltipped').each -> $(this).tooltip {delay: 50}
     return this
 
 

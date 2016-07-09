@@ -1,0 +1,14 @@
+
+.row
+  .col.s12
+    .card.hoverable
+      .card-content
+        span.card-title #{@user.login}'s submissions
+
+        .row
+          table.striped
+            tbody#submissions
+              - @submissions.each do |submission|
+                = render 'submissions/tr', submission: submission
+
+= render 'tasks/show_submission_modal'

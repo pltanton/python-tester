@@ -1,5 +1,6 @@
 class TasksController < ApplicationController
-  before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :set_task, only: %i(show edit update destroy)
+  before_action :admin_only, except: %i(show)
 
   # GET /tasks
   # GET /tasks.json
@@ -31,6 +32,8 @@ class TasksController < ApplicationController
     respond_to do |format|
       if @task.save
         save_tests JSON.parse(params[:tests])
+        format.html { redirect_to @task, notice: 'Task created.' }
+        format.json { render :show, status: :ok, location: @task }
       else
         format.json { render json: @task.errors, status: 500 }
       end

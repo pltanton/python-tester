@@ -1,0 +1,3 @@
+- submission = status_for_user_task user, task
+div.solution-cell data-user-id='#{user.id}' data-task-id='#{task.id}' data-submission-id='#{submission[:bad_submission].id if submission[:bad_submission]}'
+  | #{submission[:status]}

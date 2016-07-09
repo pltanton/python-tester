@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
 
   def admin_only
     unless current_user && current_user.admin
-      redirect_to :back, alert: 'Access denied.'
+      redirect_back fallback_location: '/', alert: 'Access denied.'
     end
   end
 end

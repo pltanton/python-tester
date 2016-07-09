@@ -12,8 +12,12 @@ App.cable.initSubmisisons = ->
       tr = $($.parseHTML(data)).hide()
       subm = $("[data-submission-id='#{tr.data().submissionId}']")
       if subm.length == 1
-        subm.fadeOut().replaceWith(tr).fadeIn()
+        console.log 'fadeOut'
+        subm.fadeOut 400, () -> 
+          subm.replaceWith(tr)
+          tr.fadeIn()
       else
+        console.log 'fadeIn'
         tr.prependTo('#submissions').fadeIn()
       $('.tooltipped').tooltip {delay: 50}
       # Called when there's incoming data on the websocket for this channel

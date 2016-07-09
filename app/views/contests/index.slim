@@ -1,0 +1,23 @@
+.row
+  .col.s12
+    .card.hoverable
+      .card-content
+        span.card-title Contests
+
+      table.striped
+        thead: tr
+          th width='7%' ID
+          th Name
+          - if current_user && current_user.admin
+            th width='10%' colspan='2'
+        tbody
+          - @contests.each do |contest|
+            - if contest.active
+              tr style='cursor: pointer'
+                td[onclick='window.location.href="#{contest_path(contest)}"'] ##{contest.id}
+                td[onclick='window.location.href="#{contest_path(contest)}"'] #{contest.name}
+                - if current_user && current_user.admin
+                  td
+                    = link_to content_tag(:i, 'mode_edit', class: %w(material-icons black-text)), edit_contest_path(contest)
+                  td
+                    = link_to content_tag(:i, 'delete', class: %w(material-icons black-text)), contest, method: :delete, data: { confirm: 'Are you sure?' }

@@ -1,0 +1,18 @@
+table#total-table.bordered.centered.responsive-table
+  thead
+    tr
+      td: b data-filed='login' Login
+      - tasks.each do |task|
+        td.tooltipped data-position='top' data-tooltip='#{task.title}'
+          = link_to content_tag(:b, "##{task.id}"), task, class: 'black-text'
+  tbody
+    - User.all.order(:login).each do |user|
+      tr
+        td
+          | #{user.login}
+        - tasks.each do |task|
+          td
+            = render 'submissions/for_task_user', user: user, task: task
+
+- if current_user
+  = render 'tasks/show_submission_modal'

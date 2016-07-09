@@ -12,13 +12,7 @@ class TestSubmissionJob < ApplicationJob
     number_of_test = 1
     Test.where(task: submission.task).each do |test|
       status, output = test_solution_unit test, submission
-      case status
-      when :TL
-        submission.update status: "TL ##{number_of_test}",
-                          bad_test_id: test.id
-        ok = false
-        break
-      when :WA, :SE
+      if status != :OK
         submission.update status: "#{status} ##{number_of_test}",
                           bad_test_id: test.id,
                           bad_out: output.to_s
@@ -48,10 +42,20 @@ class TestSubmissionJob < ApplicationJob
       elsif stdout.squish == test.out.squish
         :OK
       else
-        return :WA, stdout
+        return :WA, strip_out(stdout)
       end
     rescue Timeout::Error
-      :TL
+      return :TL, "Stdout:\n" + strip_out(stdout) + "\n\nStderr:\n" + stderr
+    end
+  end
+
+  private
+
+  def strip_out(output)
+    if output.length > 230
+      output[0, 230] + '...[OUTPUT STRIPPED]...'
+    else
+      output
     end
   end
 end

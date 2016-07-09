@@ -10,10 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160707224220) do
+ActiveRecord::Schema.define(version: 20160709215921) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "contest_tasks", force: :cascade do |t|
+    t.integer "contest_id"
+    t.integer "task_id"
+    t.index ["contest_id", "task_id"], name: "index_contest_tasks_on_contest_id_and_task_id", unique: true, using: :btree
+    t.index ["contest_id"], name: "index_contest_tasks_on_contest_id", using: :btree
+    t.index ["task_id"], name: "index_contest_tasks_on_task_id", using: :btree
+  end
+
+  create_table "contests", force: :cascade do |t|
+    t.string  "name"
+    t.integer "position"
+    t.boolean "active",      default: true
+    t.text    "description"
+    t.index ["name"], name: "index_contests_on_name", unique: true, using: :btree
+    t.index ["position"], name: "index_contests_on_position", unique: true, using: :btree
+  end
 
   create_table "submissions", force: :cascade do |t|
     t.integer  "task_id"
@@ -47,6 +64,8 @@ ActiveRecord::Schema.define(version: 20160707224220) do
     t.index ["login"], name: "index_users_on_login", unique: true, using: :btree
   end
 
+  add_foreign_key "contest_tasks", "contests"
+  add_foreign_key "contest_tasks", "tasks"
   add_foreign_key "submissions", "tasks"
   add_foreign_key "submissions", "tests", column: "bad_test_id"
   add_foreign_key "submissions", "users"

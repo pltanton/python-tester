@@ -1,7 +1,7 @@
 class Submission < ApplicationRecord
   belongs_to :task
   belongs_to :user
-  belongs_to :bad_test, class_name: 'Test', primary_key: :bad_test_id
+  has_one :bad_test, class_name: 'Test', primary_key: :bad_test_id
 
   after_commit { SubmissionsBroadcastJob.perform_later self }
 

@@ -1,0 +1,21 @@
+.row
+  .col.s12
+    .card.hoverable
+      .card-content
+        span.card-title Users
+
+      table.striped
+        thead: tr
+          th width='20%' Login
+          th Password
+          th width='10%' colspan='2'
+        tbody
+          - @users.each do |user|
+						tr style='cursor: pointer'
+							td[onclick='window.location.href="#{user_path(user)}"'] ##{user.login}
+							td[onclick='window.location.href="#{user_path(user)}"'] #{user.password}
+							td
+								= link_to content_tag(:i, 'mode_edit', class: %w(material-icons black-text)), edit_user_path(user)
+							td
+								= link_to content_tag(:i, 'delete', class: %w(material-icons black-text)), user, method: :delete, data: { confirm: 'Are you sure?' }
+

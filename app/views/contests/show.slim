@@ -1,0 +1,20 @@
+.row
+  .col.s12
+    .card.hoverable
+      .card-content
+        span.card-title
+          | Contest ##{@contest.id}: #{@contest.name}
+          - if current_user && current_user.admin
+            = link_to content_tag(:i, 'mode_edit', class: %w(material-icons black-text right)), edit_contest_path(@contest)
+
+        p
+          = markdown @contest.description unless @contest.description.nil?
+
+= render 'tasks/show_all', tasks: @tasks
+
+.row
+  .col.s12
+    .card.hoverable
+      .card-content
+        span.card-title Contest table
+        = render 'submissions/submissions', tasks: @contest.tasks.order(:id)

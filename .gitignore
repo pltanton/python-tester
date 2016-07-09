@@ -6,6 +6,7 @@
 
 # Ignore bundler config.
 /.bundle
+/public/assets/
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
@@ -19,3 +20,15 @@
 
 # Ignore Byebug command history file.
 .byebug_history
+
+# Ignore vim files
+# swap
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+# session
+Session.vim
+# temporary
+.netrwhist
+*~
+# auto-generated tag files
+tags<S-Del>

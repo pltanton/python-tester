@@ -1,8 +1,9 @@
 require 'shellwords'
 
 class SubmissionsController < ApplicationController
+  include ActionView::Helpers::TextHelper
   before_action :set_submission, only: %i(show edit update destroy)
-  before_action :admin_only, except: %i(create index)
+  before_action :admin_only, except: %i(create index show)
 
   # GET /submissions
   def index
@@ -10,15 +11,19 @@ class SubmissionsController < ApplicationController
     @submissions = Submission.all
   end
 
-  # GET /tasks/1.json
+  # GET /submissions/1.json
   def show
     code = CodeRay.scan(@submission.solution, :python).div
-    respond_to do |format|
-      format.json do
-        render json: { title: "Submission ##{@submission.id}",
-                       body: code,
-                       output: @submission.bad_out }
+    if current_user && current_user.admin || current_user == @submission.user
+      respond_to do |format|
+        format.json do
+          render json: { title: "Submission ##{@submission.id}",
+                         body: code,
+                         output: simple_format(@submission.bad_out) }
+        end
       end
+    else
+      redirect_back fallback_location: '/'
     end
   end
 
@@ -34,11 +39,14 @@ class SubmissionsController < ApplicationController
     if @submission.save
       TestSubmissionJob.perform_later @submission
     else
+      puts 'ERROR'
+      puts @submission.errors.to_json
       respond_to do |format|
         format.json do
           render json: { errors: @submission.errors },
                  status: :internal_server_error
         end
+        format.html {}
       end
     end
   end
