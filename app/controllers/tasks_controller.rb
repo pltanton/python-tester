@@ -1,15 +1,13 @@
 class TasksController < ApplicationController
   before_action :set_task, only: %i(show edit update destroy)
-  before_action :admin_only, except: %i(show)
+  before_action :admin_only, except: %i(index show)
 
   # GET /tasks
-  # GET /tasks.json
   def index
     @tasks = Task.all
   end
 
   # GET /tasks/1
-  # GET /tasks/1.json
   def show
     if current_user
       @submissions = Submission.find_for_user_and_task current_user, @task
@@ -41,17 +39,13 @@ class TasksController < ApplicationController
   end
 
   # PATCH/PUT /tasks/1
-  # PATCH/PUT /tasks/1.json
   def update
-    puts task_params
     respond_to do |format|
       if @task.update(task_params)
-        save_tests(JSON.parse params[:tests])
-        format.html { redirect_to @task, notice: 'Task was successfully updated.' }
-        format.json { render :show, status: :ok, location: @task }
+        save_tests JSON.parse(params[:tests])
+        format.html { redirect_to @task, notice: 'Task was updated.' }
       else
         format.html { render :edit }
-        format.json { render json: @task.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -61,7 +55,7 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy
     respond_to do |format|
-      format.html { redirect_to tasks_url, notice: 'Task was successfully destroyed.' }
+      format.html { redirect_to tasks_url, notice: 'Task was destroyed.' }
       format.json { head :no_content }
     end
   end

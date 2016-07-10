@@ -14,23 +14,34 @@ html
           | MMSH Python Checker
         ul#nav-mobile.right
           li
+            = link_to 'Contests', contests_path
             = link_to 'Tasks', tasks_path
           - if current_user
             li: a[href='/logout'] Log out
-          - else 
+          - else
             li: a[href='/login'] Log in
     #content.container
       = yield
-      
+
     - if current_user && current_user.admin
       .fixed-action-btn style='bottom: 45px; right: 24px;'
         a.btn-floating.btn-large.red
           i.material-icons settings
         ul
           li
-            = link_to content_tag(:i, 'contacts', class: %w(material-icons)), users_path, class: %w(btn-floating blue)
+            = link_to content_tag(:i, 'insert_chart', \
+            class: %w(material-icons)), submissions_path, \
+            class: %w(btn-floating brown darken-1 tooltipped), \
+            data: { tooltip: 'Submissions table', position: 'left' }
           li
-            = link_to content_tag(:i, 'note_add', class: %w(material-icons)), new_task_path, class: %w(btn-floating green)
+            = link_to content_tag(:i, 'contacts', class: %w(material-icons)), \
+            users_path, class: %w(btn-floating blue tooltipped), \
+            data: { tooltip: 'Manage users', position: 'left' }
+          li
+            = link_to content_tag(:i, 'note_add', class: %w(material-icons)), \
+            new_task_path, class: %w(btn-floating green tooltipped), \
+            data: { tooltip: 'New task', position: 'left' }
+
     = include_rails_script
 
 javascript:

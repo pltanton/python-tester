@@ -1,6 +1,6 @@
 class ContestsController < ApplicationController
   before_action :set_contest, only: %i(show edit update destroy)
-  before_action :admin_only, except: %(index show)
+  before_action :admin_only, except: %i(index show)
 
   # GET /contests
   # GET /contests.json

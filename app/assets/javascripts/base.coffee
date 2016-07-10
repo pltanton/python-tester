@@ -11,7 +11,8 @@ class App.Base
     $('textarea').each -> $(this).trigger('autoresize')
     Materialize.updateTextFields()
     $('.material-tooltip:visible').each -> $(this).remove()
-    $('.tooltipped').each -> $(this).tooltip {delay: 50}
+    $('.tooltipped').each -> $(this).tooltip {delay: 0}
+    $('.fixed-action-btn').each -> $(this).closeFAB()
     return this
 
 
